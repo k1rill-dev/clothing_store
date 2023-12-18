@@ -29,7 +29,7 @@ schema_view = get_schema_view(
         description="Backend endpoints",
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,),
+    permission_classes=[permissions.AllowAny,],
 )
 
 urlpatterns = [
@@ -37,7 +37,8 @@ urlpatterns = [
     path("aboba/", include("clothing_store.urls")),
     path('docs/<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path("api/v1/", include("sold_system.urls"))
+    path("api/v1/", include("sold_system.urls")),
+    path("api/token/", include("authentication.urls"))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

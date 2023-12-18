@@ -130,7 +130,7 @@ class AbstractProduct(models.Model):
     material: Material = models.ForeignKey(Material, on_delete=models.CASCADE, verbose_name="Материал")
 
     def __str__(self):
-        return self.product.name
+        return self.product.title
 
     class Meta:
         abstract = True
@@ -152,6 +152,7 @@ class FurCoat(AbstractProduct):
     collar_style: models.CharField = models.CharField(max_length=255, verbose_name="Стиль воротника")
 
     class Meta:
+        abstract = False
         managed = True
         verbose_name = 'Шуба'
         verbose_name_plural = 'Шубы'
@@ -159,6 +160,7 @@ class FurCoat(AbstractProduct):
 
 class Gloves(AbstractProduct):
     class Meta:
+        abstract = False
         managed = True
         verbose_name = 'Перчатки'
         verbose_name_plural = 'Перчатки'
@@ -166,6 +168,7 @@ class Gloves(AbstractProduct):
 
 class Hat(AbstractProduct):
     class Meta:
+        abstract = False
         managed = True
         verbose_name = 'Шапка'
         verbose_name_plural = 'Шапки'
@@ -182,6 +185,43 @@ class Bag(AbstractProduct):
     inside_pockets_count: models.IntegerField = models.IntegerField(verbose_name="Кол-во внутренних карманов")
 
     class Meta:
+        abstract = False
         managed = True
         verbose_name = 'Сумка'
         verbose_name_plural = 'Сумки'
+
+
+class PhotoFurCoat(models.Model):
+    image = models.ImageField(upload_to='img/fur_coat/%Y/%m/%d/', null=True, blank=True, verbose_name='Фото шубы',
+                              default='aboba')
+    fur_coat = models.ForeignKey(FurCoat, on_delete=models.CASCADE, verbose_name="Шуба")
+
+    def __str__(self):
+        return self.fur_coat.product.title
+
+
+class PhotoGloves(models.Model):
+    image = models.ImageField(upload_to='img/gloves/%Y/%m/%d/', null=True, blank=True, verbose_name='Фото перчатки',
+                              default='aboba')
+    gloves = models.ForeignKey(Gloves, on_delete=models.CASCADE, verbose_name="Перчатки")
+
+    def __str__(self):
+        return self.gloves.product.title
+
+
+class PhotoBag(models.Model):
+    image = models.ImageField(upload_to='img/bag/%Y/%m/%d/', null=True, blank=True, verbose_name='Фото сумки',
+                              default='aboba')
+    bag = models.ForeignKey(Bag, on_delete=models.CASCADE, verbose_name="Сумка")
+
+    def __str__(self):
+        return self.bag.product.title
+
+
+class PhotoHat(models.Model):
+    image = models.ImageField(upload_to='img/hat/%Y/%m/%d/', null=True, blank=True, verbose_name='Фото шапки',
+                              default='aboba')
+    hat = models.ForeignKey(Hat, on_delete=models.CASCADE, verbose_name="Шапка")
+
+    def __str__(self):
+        return self.hat.product.title
