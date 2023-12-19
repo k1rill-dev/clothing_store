@@ -10,7 +10,7 @@ class FurCoatSale(models.Model):
     basket = models.ManyToManyField(FurCoat, verbose_name="Товары")
 
     def __str__(self):
-        return self.date_sell
+        return str(self.date_sell)
 
     class Meta:
         managed = True
@@ -23,7 +23,7 @@ class GlovesSale(models.Model):
     basket = models.ManyToManyField(Gloves, verbose_name="Товары")
 
     def __str__(self):
-        return self.date_sell
+        return str(self.date_sell)
 
     class Meta:
         managed = True
@@ -31,12 +31,13 @@ class GlovesSale(models.Model):
         verbose_name_plural = "Продажи перчаток"
 
 
+
 class BagSale(models.Model):
     date_sell: models.DateTimeField = models.DateTimeField(auto_now_add=True, verbose_name="Дата продажи")
     basket = models.ManyToManyField(Bag, verbose_name="Товары")
 
     def __str__(self):
-        return self.date_sell
+        return str(self.date_sell)
 
     class Meta:
         managed = True
@@ -44,12 +45,13 @@ class BagSale(models.Model):
         verbose_name_plural = "Продажи сумок"
 
 
+
 class HatSale(models.Model):
     date_sell: models.DateTimeField = models.DateTimeField(auto_now_add=True, verbose_name="Дата продажи")
     basket = models.ManyToManyField(Hat, verbose_name="Товары")
 
     def __str__(self):
-        return self.date_sell
+        return str(self.date_sell)
 
     class Meta:
         managed = True
