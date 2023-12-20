@@ -1,6 +1,31 @@
 from rest_framework import serializers
 
-from .models import FurCoat, Hat, Bag, Gloves, Product, Material, ManufacturerCountry, Brand, Season, Size
+from .models import FurCoat, Hat, Bag, Gloves, Product, Material, ManufacturerCountry, Brand, Season, Size, \
+    PhotoFurCoat, PhotoGloves, PhotoHat, PhotoBag
+
+
+class PhotoFurCoatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhotoFurCoat
+        exclude = ("fur_coat",)
+
+
+class PhotoGlovesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhotoGloves
+        exclude = ("gloves",)
+
+
+class PhotoHatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhotoHat
+        exclude = ("hat",)
+
+
+class PhotoBagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhotoBag
+        exclude = ("bag",)
 
 
 class SizeSerializer(serializers.ModelSerializer):
@@ -51,7 +76,7 @@ class FurCoatSerializer(serializers.ModelSerializer):
     class Meta:
         model = FurCoat
         fields = (
-            "price", "product", 'manufacturer', 'season', 'brand', 'material', 'removable_part', 'hood', 'clasp',
+            'id', "price", "product", 'manufacturer', 'season', 'brand', 'material', 'removable_part', 'hood', 'clasp',
             'length', 'shadow', 'collar_style')
 
 
@@ -65,7 +90,7 @@ class HatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hat
         fields = (
-            "price", "product", 'manufacturer', 'season', 'brand', 'material')
+            'id', "price", "product", 'manufacturer', 'season', 'brand', 'material')
 
 
 class BagSerializer(serializers.ModelSerializer):
@@ -78,8 +103,9 @@ class BagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bag
         fields = (
-            "price", "product", 'manufacturer', 'season', 'brand', 'material', 'clasp', 'width', 'width_of_bottom',
-            'height', 'belt', 'equipment', 'legs', 'inside_pockets_count'
+            'id', "price", "product", 'manufacturer', 'season', 'brand', 'material', 'clasp', 'width',
+            'width_of_bottom',
+            'height', 'belt', 'equipment', 'legs', 'inside_pockets_count',
         )
 
 
@@ -93,4 +119,4 @@ class GlovesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gloves
         fields = (
-            "price", "product", 'manufacturer', 'season', 'brand', 'material')
+            'id', "price", "product", 'manufacturer', 'season', 'brand', 'material')

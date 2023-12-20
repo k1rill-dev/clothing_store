@@ -3,7 +3,7 @@ from typing import TypeVar, Generic
 from django.contrib import admin
 
 from .models import FurCoat, Gloves, Bag, Hat, Product, Size, Season, ManufacturerCountry, Brand, Material, \
-    PhotoFurCoat, PhotoGloves, PhotoHat, PhotoBag
+    PhotoFurCoat, PhotoGloves, PhotoHat, PhotoBag, SizesProduct
 
 admin.site.site_header = "Управление товарами"
 
@@ -35,6 +35,10 @@ class PhotoBagInline(admin.StackedInline):
     model = PhotoBag
 
 
+class SizesInline(admin.StackedInline):
+    model = SizesProduct
+
+
 @admin.register(FurCoat)
 class FurCoatAdmin(GenericClothesAdmin[FurCoat]):
     inlines = [PhotoFurCoatInline]
@@ -55,7 +59,17 @@ class HatAdmin(GenericClothesAdmin[Hat]):
     inlines = [PhotoHatInline]
 
 
-admin.site.register(Product)
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    inlines = [SizesInline]
+    list_display = ['title', 'color', 'date_of_receipt']
+    list_filter = ['title', 'color']
+    list_display_links = ['title']
+    raw_id_fields = ['sizes']
+    search_fields = ['title', 'color', 'date_of_receipt']
+    ordering = ['date_of_receipt']
+
+
 admin.site.register(Size)
 admin.site.register(Season)
 admin.site.register(ManufacturerCountry)

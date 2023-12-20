@@ -108,7 +108,8 @@ class Product(models.Model):
     title: models.CharField = models.CharField(max_length=255, verbose_name="Название")
     color: models.CharField = models.CharField(max_length=255, verbose_name="Цвет")
     description: models.CharField = models.CharField(max_length=255, verbose_name="Описание")
-    sizes: models.ManyToManyField = models.ManyToManyField(Size, null=True, blank=True, verbose_name="Размеры")
+    sizes: models.ManyToManyField = models.ManyToManyField(Size, null=True, blank=True, verbose_name="Размеры",
+                                                           through="SizesProduct")
     date_of_receipt: models.DateTimeField = models.DateTimeField(auto_now_add=True, verbose_name="Дата завоза")
 
     def __str__(self):
@@ -118,6 +119,20 @@ class Product(models.Model):
         managed = True
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
+
+class SizesProduct(models.Model):
+    size = models.ForeignKey(Size, on_delete=models.CASCADE, verbose_name="Размер")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Товар")
+    count = models.PositiveIntegerField(default=1, verbose_name="Количество товаров данного размера")
+
+
+var = {
+    "id": "asadad",
+    "count": 2,
+    "size": 42,
+    "type": "fur_coat"
+}
 
 
 class AbstractProduct(models.Model):
@@ -159,6 +174,14 @@ class FurCoat(AbstractProduct):
 
 
 class Gloves(AbstractProduct):
+    id: models.UUIDField = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+        verbose_name="UUID"
+    )
+
     class Meta:
         abstract = False
         managed = True
@@ -167,6 +190,14 @@ class Gloves(AbstractProduct):
 
 
 class Hat(AbstractProduct):
+    id: models.UUIDField = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+        verbose_name="UUID"
+    )
+
     class Meta:
         abstract = False
         managed = True
@@ -175,6 +206,13 @@ class Hat(AbstractProduct):
 
 
 class Bag(AbstractProduct):
+    id: models.UUIDField = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+        verbose_name="UUID"
+    )
     clasp: models.CharField = models.CharField(max_length=255, verbose_name="Застежки")
     width: models.FloatField = models.FloatField(verbose_name="Ширина")
     width_of_bottom: models.FloatField = models.FloatField(verbose_name="Ширина дна")
