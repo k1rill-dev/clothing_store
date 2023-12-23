@@ -1,3 +1,4 @@
+import uuid
 from typing import List, Tuple
 
 from django.http import JsonResponse
@@ -8,64 +9,138 @@ from rest_framework.request import Request
 from django.db.models import Model
 
 from authentication.models import User
-from clothing_store.models import FurCoat, Gloves, Bag, Hat
+from backend.settings import Products
+from clothing_store.models import FurCoat, Gloves, Bag, Hat, Size
 from sold_system.models import FurCoatSale, HatSale, BagSale, GlovesSale
 from sold_system.serializers import FurCoatSaleSerializer, HatSaleSerializer, BagSaleSerializer, GlovesSaleSerializer
 import enum
-
-
-class Products(enum.Enum):
-    fur_coat: str = 'fur_coat'
-    hat: str = 'hat'
-    gloves: str = 'gloves'
-    bag: str = 'bag'
 
 
 class FurCoatSaleViewSet(viewsets.ModelViewSet):
     queryset = FurCoatSale.objects.all()
     serializer_class = FurCoatSaleSerializer
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.get_queryset().filter(seller=request.user)
+        page = self.paginate_queryset(self.queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(self.queryset, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
 
 class HatSaleViewSet(viewsets.ModelViewSet):
     queryset = HatSale.objects.all()
     serializer_class = HatSaleSerializer
+
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.get_queryset().filter(seller=request.user)
+        page = self.paginate_queryset(self.queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(self.queryset, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
 
 class BagSaleViewSet(viewsets.ModelViewSet):
     queryset = BagSale.objects.all()
     serializer_class = BagSaleSerializer
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.get_queryset().filter(seller=request.user)
+        page = self.paginate_queryset(self.queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(self.queryset, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
 
 class GlovesSaleViewSet(viewsets.ModelViewSet):
     queryset = GlovesSale.objects.all()
     serializer_class = GlovesSaleSerializer
 
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.get_queryset().filter(seller=request.user)
+        page = self.paginate_queryset(self.queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(self.queryset, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
 
 def _get_model_object(product: dict, product_model: Model) -> Model:
-    product_id = product.get("id")
+    product_id = product.get("product_id")
     product_object = get_object_or_404(product_model, pk=product_id)
     return product_object
 
+
 def _get_product(products: List[dict], user: User) -> JsonResponse:
-    fur_coats_object_list = list();hat_object_list = list();gloves_object_list = list();bag_object_list = list()
+    fur_coats_object_list = list()
+    hat_object_list = list()
+    gloves_object_list = list()
+    bag_object_list = list()
     json = []
     for product in products:
         match product.get("type"):
             case Products.fur_coat.value:
                 fur_coat = _get_model_object(product, FurCoat)
-                for size in fur_coat.product.sizesproduct_set.all(): size.count -= product.get("size")
+                size = Size.objects.get(
+                    pk=fur_coat.product.sizesproduct_set.get(size_id=product.get("size_id")).size_id)
+                if size.count < 0:
+                    return JsonResponse(
+                        {"error": "Товара такого размера нет в наличии"})
+                if product.get("count") > size.count:
+                    return JsonResponse(
+                        {"error": "Отстутствует такое количество товаров"})
+                size.count -= product.get("count")
+                size.save()
                 fur_coats_object_list.append(fur_coat)
             case Products.gloves.value:
                 gloves = _get_model_object(product, Gloves)
-                for size in gloves.product.sizesproduct_set.all(): size.count -= product.get("size")
+                size = Size.objects.get(
+                    pk=gloves.product.sizesproduct_set.get(size_id=product.get("size_id")).size_id)
+                if size.count < 0:
+                    return JsonResponse(
+                        {"error": "Товара такого размера нет в наличии"})
+                if product.get("count") > size.count:
+                    return JsonResponse(
+                        {"error": "Отстутствует такое количество товаров"})
+                size.count -= product.get("count")
+                size.save()
                 gloves_object_list.append(gloves)
             case Products.bag.value:
                 bag = _get_model_object(product, Bag)
-                for size in bag.product.sizesproduct_set.all(): size.count -= product.get("size")
+                size = Size.objects.get(
+                    pk=bag.product.sizesproduct_set.get(size_id=product.get("size_id")).size_id)
+                if size.count < 0:
+                    return JsonResponse(
+                        {"error": "Товара такого размера нет в наличии"})
+                if product.get("count") > size.count:
+                    return JsonResponse(
+                        {"error": "Отстутствует такое количество товаров"})
+                size.count -= product.get("count")
+                size.save()
                 bag_object_list.append(bag)
             case Products.hat.value:
                 hat = _get_model_object(product, Hat)
-                for size in hat.product.sizesproduct_set.all(): size.count -= product.get("size")
+                size = Size.objects.get(
+                    pk=hat.product.sizesproduct_set.get(size_id=product.get("size_id")).size_id)
+                if size.count < 0:
+                    return JsonResponse(
+                        {"error": "Товара такого размера нет в наличии"})
+                if product.get("count") > size.count:
+                    return JsonResponse(
+                        {"error": "Отстутствует такое количество товаров"})
+                size.count -= product.get("count")
+                size.save()
                 hat_object_list.append(hat)
     if fur_coats_object_list:
         fur_coat_sale = FurCoatSale.objects.create(seller=user)

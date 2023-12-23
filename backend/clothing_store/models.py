@@ -87,6 +87,7 @@ class Size(models.Model):
         verbose_name="UUID"
     )
     size: models.CharField = models.CharField(max_length=255, verbose_name="Размер")
+    count = models.PositiveIntegerField(default=1, verbose_name="Количество товаров данного размера")
 
     def __str__(self):
         return self.size
@@ -124,15 +125,6 @@ class Product(models.Model):
 class SizesProduct(models.Model):
     size = models.ForeignKey(Size, on_delete=models.CASCADE, verbose_name="Размер")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Товар")
-    count = models.PositiveIntegerField(default=1, verbose_name="Количество товаров данного размера")
-
-
-var = {
-    "id": "asadad",
-    "count": 2,
-    "size": 42,
-    "type": "fur_coat"
-}
 
 
 class AbstractProduct(models.Model):

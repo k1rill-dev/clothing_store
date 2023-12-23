@@ -1,39 +1,54 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ProductCard from "./ProductCard";
+import axios from "axios";
+import isAuthCheck from "./tools";
+import {Navigate} from "react-router-dom";
+import requesterXML from "../../utilities/requesterXML";
 
-const ProductList = ({  }) => {
-  const products = [
-  {
-    name: "Apple iPhone 14 Pro Max",
-    description: "The most advanced iPhone ever",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/IPhone_14_Pro_Max_%28front%29.jpg/1200px-IPhone_14_Pro_Max_%28front%29.jpg",
-    price: 1.099
-  },
-  {
-    name: "Samsung Galaxy S23 Ultra",
-    description: "The best Android phone on the market",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Samsung_Galaxy_S23_Ultra_%28front%29.jpg/1200px-Samsung_Galaxy_S23_Ultra_%28front%29.jpg",
-    price: 999
-  },
-  {
-    name: "Google Pixel 7 Pro",
-    description: "The best Pixel phone yet",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Samsung_Galaxy_S23_Ultra_%28front%29.jpg/1200px-Samsung_Galaxy_S23_Ultra_%28front%29.jpg",
-    price: 899
-  }
-];
-  return (
-    <div className="flex flex-wrap justify-center mt-10">
-      <h1 className="text-xl font-semibold mb-4">Products</h1>
-      <ul className="flex flex-wrap justify-between mt-4">
-        {products.map((product) => (
-          <li key={product.id} className="flex flex-col justify-between w-full px-4 py-2">
-            <ProductCard/>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
+
+const ProductList = ({onAddItem}) => {
+    let data = []
+    let furcoat = requesterXML("GET", "http://localhost:8000/api/v1/furcoat/", false, null)
+    furcoat.map((element) => {
+        Object.assign(element, {type: "furcoat"})
+    })
+    let gloves = requesterXML("GET", "http://localhost:8000/api/v1/gloves/", false, null)
+    gloves.map((element) => {
+        Object.assign(element, {type: "gloves"})
+    })
+    let hat = requesterXML("GET", "http://localhost:8000/api/v1/hat/", false, null)
+    hat.map((element) => {
+        Object.assign(element, {type: "hat"})
+    })
+    let bag = requesterXML("GET", "http://localhost:8000/api/v1/bag/", false, null)
+    bag.map((element) => {
+        Object.assign(element, {type: "bag"})
+    })
+    data.push(furcoat)
+    data.push(gloves)
+    data.push(hat)
+    data.push(bag)
+    // console.log(data)
+    data = data.flat(1)
+    console.log(data)
+    // console.log(onAddItem)
+    if (isAuthCheck()) {
+        return (
+            <div className="flex flex-wrap mt-10">
+                <ul className="flex flex-wrap justify-between mt-4">
+                    {data.map((product) => (
+                        <li key={product.id} className="flex flex-col justify-between w-full px-4 py-2">
+                            <ProductCard product={product} onAddItem={onAddItem}/>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        );
+    }
+    else{
+        return (<Navigate to={"/login"}></Navigate>)
+    }
+}
+
 
 export default ProductList;

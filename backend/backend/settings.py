@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+import enum
+import os
 from datetime import timedelta
 from pathlib import Path
 import environ
@@ -151,14 +153,13 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     'http://localhost:3000',
     'http://0.0.0.0:8000',
 ]
+CSRF_COOKIE_HTTPONLY = False
 
 INTERNAL_IPS = [
     "127.0.0.1",
     "0.0.0.0",
     "localhost"
 ]
-
-AUTH_USER_MODEL = "authentication.User"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -210,10 +211,21 @@ SIMPLE_JWT = {
     # Whether to set the flag restricting cookie leaks on cross-site requests. This can be 'Lax', 'Strict', or None to disable the flag.
 }
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://localhost:8000']
+AUTH_USER_MODEL = "authentication.User"
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = "/media/"
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
+
+
+class Products(enum.Enum):
+    fur_coat: str = 'furcoat'
+    hat: str = 'hat'
+    gloves: str = 'gloves'
+    bag: str = 'bag'

@@ -35,7 +35,6 @@ def set_cookies(response: Response, data: Dict[str, Any]) -> None:
         expires=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
         secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
         httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
-        samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
     )
     response.set_cookie(
         key='refresh_token',
@@ -43,7 +42,6 @@ def set_cookies(response: Response, data: Dict[str, Any]) -> None:
         expires=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
         secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
         httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
-        samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
     )
 
 
@@ -65,6 +63,7 @@ class LoginView(APIView):
                 response["X-CSRFToken"] = csrf.get_token(request)
                 serializer = UserSerializer(user)
                 response.data = {"Success": "Login successfully", **serializer.data}
+                print(response.cookies)
                 return response
             else:
                 return Response({"No active": "This account is not active!!"}, status=status.HTTP_404_NOT_FOUND)

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .models import FurCoat, Hat, Bag, Gloves, Product, Material, ManufacturerCountry, Brand, Season, Size, \
-    PhotoFurCoat, PhotoGloves, PhotoHat, PhotoBag
+    PhotoFurCoat, PhotoGloves, PhotoHat, PhotoBag, SizesProduct
 
 
 class PhotoFurCoatSerializer(serializers.ModelSerializer):
@@ -31,7 +31,7 @@ class PhotoBagSerializer(serializers.ModelSerializer):
 class SizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Size
-        exclude = ("id",)
+        fields = ("size", "count", "id")
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -82,10 +82,10 @@ class FurCoatSerializer(serializers.ModelSerializer):
 
 class HatSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
-    manufacturer = ManufacturerCountrySerializer()
-    season = SeasonSerializer()
-    brand = BrandSerializer()
-    material = MaterialSerializer()
+    manufacturer = serializers.CharField(source='manufacturer.manufacturer')
+    season = serializers.CharField(source='season.season')
+    brand = serializers.CharField(source='brand.brand')
+    material = serializers.CharField(source='material.title')
 
     class Meta:
         model = Hat
@@ -95,10 +95,10 @@ class HatSerializer(serializers.ModelSerializer):
 
 class BagSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
-    manufacturer = ManufacturerCountrySerializer()
-    season = SeasonSerializer()
-    brand = BrandSerializer()
-    material = MaterialSerializer()
+    manufacturer = serializers.CharField(source='manufacturer.manufacturer')
+    season = serializers.CharField(source='season.season')
+    brand = serializers.CharField(source='brand.brand')
+    material = serializers.CharField(source='material.title')
 
     class Meta:
         model = Bag
@@ -111,10 +111,10 @@ class BagSerializer(serializers.ModelSerializer):
 
 class GlovesSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
-    manufacturer = ManufacturerCountrySerializer()
-    season = SeasonSerializer()
-    brand = BrandSerializer()
-    material = MaterialSerializer()
+    manufacturer = serializers.CharField(source='manufacturer.manufacturer')
+    season = serializers.CharField(source='season.season')
+    brand = serializers.CharField(source='brand.brand')
+    material = serializers.CharField(source='material.title')
 
     class Meta:
         model = Gloves

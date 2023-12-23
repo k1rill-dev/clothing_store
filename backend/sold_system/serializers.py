@@ -20,7 +20,7 @@ class FurCoatSaleSerializer(GenericSerializer[FurCoatSale]):
 
     class Meta:
         model = FurCoatSale
-        fields = ('date_sell', 'basket', 'seller')
+        fields = ('id', 'date_sell', 'basket', 'seller')
 
 
 class HatSaleSerializer(GenericSerializer[HatSale]):
@@ -29,7 +29,7 @@ class HatSaleSerializer(GenericSerializer[HatSale]):
 
     class Meta:
         model = HatSale
-        fields = ('date_sell', 'basket', 'seller')
+        fields = ('id', 'date_sell', 'basket', 'seller')
 
 
 class BagSaleSerializer(GenericSerializer[BagSale]):
@@ -38,7 +38,7 @@ class BagSaleSerializer(GenericSerializer[BagSale]):
 
     class Meta:
         model = BagSale
-        fields = ('date_sell', 'basket', 'seller')
+        fields = ('id', 'date_sell', 'basket', 'seller')
 
 
 class GlovesSaleSerializer(GenericSerializer[GlovesSale]):
@@ -47,4 +47,4 @@ class GlovesSaleSerializer(GenericSerializer[GlovesSale]):
 
     class Meta:
         model = GlovesSale
-        fields = ('date_sell', 'basket', 'seller')
+        fields = ('id', 'date_sell', 'basket', 'seller')
