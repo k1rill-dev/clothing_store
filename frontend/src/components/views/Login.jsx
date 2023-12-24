@@ -98,9 +98,10 @@ const Login = () => {
         }
     }
     try {
-        if (JSON.parse(localStorage.userInfo).Success === "Login successfully")
+        if (JSON.parse(localStorage.userInfo).Success === "Login successfully") {
             console.log(JSON.parse(localStorage.userInfo).Success === "Login successfully")
-        return (<Navigate to={"/"}/>)
+            return (<Navigate to={"/"}/>)
+        }
     } catch (e) {
         return (
             <div className="row g-0 auth-wrapper">

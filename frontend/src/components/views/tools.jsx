@@ -5,6 +5,9 @@ function isAuthCheck() {
         ) {
             return JSON.parse(localStorage.userInfo).email;
         }
+        else{
+            return false
+        }
     } catch (e) {
         return false;
     }

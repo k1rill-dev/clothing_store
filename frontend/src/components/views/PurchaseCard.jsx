@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const PurchaseCard = ({purchase, index}) => {
   // console.log(purchase)
@@ -7,6 +7,7 @@ const PurchaseCard = ({purchase, index}) => {
   purchase.basket.forEach((element) => {
     sum+=element.price
   })
+
     return (
         <div className="max-w-sm w-full lg:max-w-full lg:flex">
   <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
@@ -26,11 +27,11 @@ const PurchaseCard = ({purchase, index}) => {
         <p className="text-gray-600">Когда продал - {purchase.date_sell}</p>
       </div>
     </div>
-    <Link to={"/purchase/" + purchase.id}>
-       <button className={"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"}>
-    Посмотреть покупку
-    </button>
-    </Link>
+    {/*<Link to={"/purchase/" + purchase.id}>*/}
+    {/*   <button className={"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"}>*/}
+    {/*Посмотреть покупку*/}
+    {/*</button>*/}
+    {/*</Link>*/}
   </div>
 </div>
 

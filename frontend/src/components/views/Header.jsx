@@ -1,6 +1,7 @@
 import React from "react";
 import isAuthCheck from "./tools";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 async function logoutUser() {
     try {
@@ -25,8 +26,7 @@ async function logoutUser() {
 
 
 const Header = () => {
-
-
+    let navigate = useNavigate();
     if (isAuthCheck()) {
         return (
             <header className="bg-white shadow">
@@ -42,7 +42,10 @@ const Header = () => {
                             <a href={"/"} className="text-lg font-semibold" style={{margin: "0 50px"}}>
                                 Все товары
                             </a>
-                            <button className="text-lg font-semibold" style={{margin: "0 50px"}} onClick={logoutUser    }>
+                            <button className="text-lg font-semibold" style={{margin: "0 50px"}} onClick={() => {
+                                logoutUser();
+                                navigate("/login");
+                            }}>
                                 Выйти из аккаунта
                             </button>
                         </nav>
