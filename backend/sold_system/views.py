@@ -102,7 +102,7 @@ def _get_product(products: List[dict], user: User) -> JsonResponse:
                         {"error": "Отстутствует такое количество товаров"})
                 size.count -= product.get("count")
                 size.save()
-                fur_coats_object_list.append(fur_coat)
+                fur_coats_object_list.append({"furcoat": fur_coat, "count": product.get("count")})
             case Products.gloves.value:
                 gloves = _get_model_object(product, Gloves)
                 size = Size.objects.get(
@@ -115,20 +115,12 @@ def _get_product(products: List[dict], user: User) -> JsonResponse:
                         {"error": "Отстутствует такое количество товаров"})
                 size.count -= product.get("count")
                 size.save()
-                gloves_object_list.append(gloves)
+                gloves_object_list.append({"gloves": gloves, "count": product.get("count")})
             case Products.bag.value:
                 bag = _get_model_object(product, Bag)
-                size = Size.objects.get(
-                    pk=bag.product.sizesproduct_set.get(size_id=product.get("size_id")).size_id)
-                if size.count < 0:
-                    return JsonResponse(
-                        {"error": "Товара такого размера нет в наличии"})
-                if product.get("count") > size.count:
-                    return JsonResponse(
-                        {"error": "Отстутствует такое количество товаров"})
-                size.count -= product.get("count")
-                size.save()
-                bag_object_list.append(bag)
+                bag.count -= product.get("count")
+                bag.save()
+                bag_object_list.append({"bag": bag, "count": product.get("count")})
             case Products.hat.value:
                 hat = _get_model_object(product, Hat)
                 size = Size.objects.get(
@@ -141,25 +133,29 @@ def _get_product(products: List[dict], user: User) -> JsonResponse:
                         {"error": "Отстутствует такое количество товаров"})
                 size.count -= product.get("count")
                 size.save()
-                hat_object_list.append(hat)
+                hat_object_list.append({"hat": hat, "count": product.get("count")})
     if fur_coats_object_list:
-        fur_coat_sale = FurCoatSale.objects.create(seller=user)
-        fur_coat_sale.basket.set(fur_coats_object_list)
+        total_furcoat_count = sum([i.get("count") for i in fur_coats_object_list])
+        fur_coat_sale = FurCoatSale.objects.create(seller=user, count=total_furcoat_count)
+        fur_coat_sale.basket.set([i.get("furcoat") for i in fur_coats_object_list])
         fur_coat_serializer = FurCoatSaleSerializer(fur_coat_sale)
         json.append(fur_coat_serializer.data)
     if hat_object_list:
-        hat_sale = HatSale.objects.create(seller=user)
-        hat_sale.basket.set(hat_object_list)
+        total_hat_count = sum([i.get("count") for i in hat_object_list])
+        hat_sale = HatSale.objects.create(seller=user, count=total_hat_count)
+        hat_sale.basket.set([i.get("hat") for i in hat_object_list])
         hat_sale_serializer = HatSaleSerializer(hat_sale)
         json.append(hat_sale_serializer.data)
     if gloves_object_list:
-        gloves_sale = GlovesSale.objects.create(seller=user)
-        gloves_sale.basket.set(gloves_object_list)
+        total_gloves_count = sum([i.get("count") for i in gloves_object_list])
+        gloves_sale = GlovesSale.objects.create(seller=user, count=total_gloves_count)
+        gloves_sale.basket.set([i.get("gloves") for i in gloves_object_list])
         gloves_sale_serializer = GlovesSaleSerializer(gloves_sale)
         json.append(gloves_sale_serializer.data)
     if bag_object_list:
-        bag_sale = BagSale.objects.create(seller=user)
-        bag_sale.basket.set(bag_object_list)
+        total_bag_count = sum([i.get("count") for i in bag_object_list])
+        bag_sale = BagSale.objects.create(seller=user, count=total_bag_count)
+        bag_sale.basket.set([i.get("bag") for i in bag_object_list])
         bag_sale_serializer = BagSaleSerializer(bag_sale)
         json.append(bag_sale_serializer.data)
     return JsonResponse(json, safe=False)

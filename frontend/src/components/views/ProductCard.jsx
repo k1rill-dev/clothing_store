@@ -5,7 +5,8 @@ import { useContext, useEffect, useState } from 'react'
 
 const ProductCard = ({product, onAddItem}) => {
   const { cartItems, addToCart } = useContext(CartContext)
-  console.log(product)
+  // console.log(product)
+  console.log()
     return (
         <div
       className="flex flex-col rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:max-w-xl md:flex-row">
@@ -26,15 +27,16 @@ const ProductCard = ({product, onAddItem}) => {
         </p>
         <p className="text-xs text-neutral-500 dark:text-neutral-300">Доступные размеры:</p>
         <p className="text-xs text-neutral-500 dark:text-neutral-300">
-          {product.product.sizes ? <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {product.product.sizes.length > 0 ? <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {product.product.sizes.map((size) => (
-                      <p className="mb-3 text-gray-500 dark:text-gray-400">{size.size}</p>
+                      <button onClick={() => addToCart(product, size)} className="mb-3 text-gray-500 dark:text-gray-400">{size.size}</button>
                   ))}
-            </div> : <div></div>}
+            </div> : <div>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => addToCart(product, null)}>
+              Добавить в корзину
+                  </button>
+            </div>}
         </p>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => addToCart(product)}>
-          Добавить в корзину
-        </button>
       </div>
     </div>
     );

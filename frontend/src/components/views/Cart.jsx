@@ -2,20 +2,56 @@ import {useState} from "react";
 import React from "react";
 import { useContext } from 'react'
 import { CartContext } from '../../utilities/cart'
+import axios from "axios";
+import {getCookieValue} from "../../utilities/requesterXML"
 
+const buy = async (cart) => {
+  try {
+    const {data, status} = await axios.post(
+        'http://localhost:8000/api/v1/buy',
+        cart,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            "X-CSRFToken": getCookieValue("csrftoken")
+          },
+          withCredentials: true
+        }
+    );
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log('error message: ', error.message);
+      return error.message;
+    } else {
+      console.log('unexpected error: ', error);
+      return 'An unexpected error occurred';
+    }
+  }
+}
 
 const Cart = ({ items, onItemRemove }) => {
   const { cartItems, addToCart, removeFromCart, clearCart, getCartTotal } = useContext(CartContext)
-  // let sendData = []
-  // cartItems.map((item) => {
-  //   sendData.push({
-  //     id: item.id,
-  //     size: item.size,
-  //     count: item.count,
-  //     type: item.type
-  //   })
-  // })
-
+  let sendData = []
+  cartItems.map((item) => {
+    item.currentSize !== null
+        ? sendData.push({
+      product_id: item.id,
+      size: item.currentSize.size,
+      count: item.quantity,
+      type: item.type,
+      size_id: item.currentSize.id
+    })
+        : sendData.push({
+      product_id: item.id,
+      size: null,
+      count: item.quantity,
+      type: item.type,
+      size_id: null
+    })
+  })
+  console.log(sendData)
   return (
     <div className="flex-col flex items-center bg-white gap-8 p-10 text-black text-sm">
   <h1 className="text-2xl font-bold">Корзина</h1>
@@ -33,7 +69,7 @@ const Cart = ({ items, onItemRemove }) => {
           <button
             className="px-4 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
             onClick={() => {
-              addToCart(item)
+              addToCart(item, item.currentSize)
             }}
           >
             +
@@ -62,6 +98,14 @@ const Cart = ({ items, onItemRemove }) => {
       }}
     >
       Очистить корзину
+    </button>
+        <button
+      className="px-4 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
+      onClick={() => {
+        buy(sendData)
+      }}
+    >
+      Оформить покупку
     </button>
   </div>
     ) : (

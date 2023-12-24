@@ -1,4 +1,4 @@
-function getCookie(name) {
+export function getCookieValue(name) {
     if (!document.cookie) {
         return null;
     }
@@ -13,14 +13,14 @@ function getCookie(name) {
     return decodeURIComponent(xsrfCookies[0].split('=')[1]);
 }
 
-function requesterXML(method, url, isAsync, body = null) {
+export function requesterXML(method, url, isAsync, body = null) {
     let req = new XMLHttpRequest();
     req.open(method, url, isAsync);
-    let token = getCookie('csrftoken')
+    let token = getCookieValue('csrftoken')
     req.setRequestHeader('Content-Type', 'application/json')
     req.setRequestHeader('X-CSRFToken', token)
     req.withCredentials = true
     req.send(body);
     return JSON.parse(req.responseText)
 }
-export default requesterXML;
+export default {requesterXML, getCookieValue};

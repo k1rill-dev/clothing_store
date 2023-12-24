@@ -105,7 +105,7 @@ class BagSerializer(serializers.ModelSerializer):
         fields = (
             'id', "price", "product", 'manufacturer', 'season', 'brand', 'material', 'clasp', 'width',
             'width_of_bottom',
-            'height', 'belt', 'equipment', 'legs', 'inside_pockets_count',
+            'height', 'belt', 'equipment', 'legs', 'inside_pockets_count', 'count'
         )
 
 

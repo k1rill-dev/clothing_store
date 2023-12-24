@@ -213,6 +213,7 @@ class Bag(AbstractProduct):
     equipment: models.CharField = models.CharField(max_length=255, verbose_name="Комплектация")
     legs: models.CharField = models.CharField(max_length=255, verbose_name="Ножки")
     inside_pockets_count: models.IntegerField = models.IntegerField(verbose_name="Кол-во внутренних карманов")
+    count: models.PositiveIntegerField = models.PositiveIntegerField(default=1, verbose_name="Количество сумок")
 
     class Meta:
         abstract = False

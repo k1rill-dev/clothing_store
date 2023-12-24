@@ -3,7 +3,7 @@ import ProductCard from "./ProductCard";
 import axios from "axios";
 import isAuthCheck from "./tools";
 import {Navigate} from "react-router-dom";
-import requesterXML from "../../utilities/requesterXML";
+import {requesterXML} from "../../utilities/requesterXML";
 
 
 const ProductList = ({onAddItem}) => {
@@ -30,7 +30,7 @@ const ProductList = ({onAddItem}) => {
     data.push(bag)
     // console.log(data)
     data = data.flat(1)
-    console.log(data)
+    // console.log(data)
     // console.log(onAddItem)
     if (isAuthCheck()) {
         return (
